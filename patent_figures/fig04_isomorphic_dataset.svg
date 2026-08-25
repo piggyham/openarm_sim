@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<rect width="100%" height="100%" fill="white"/>
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 Z" fill="black"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Noto Sans CJK",sans-serif;fill:black}</style>
+<text x="800.0" y="42" font-size="32" font-weight="700" text-anchor="middle" dominant-baseline="middle">图4：仿真数据转换为实机同构数据结构</text>
+<rect x="60" y="130" width="300" height="185" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="74" y="146" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">410</text>
+<text x="210.0" y="180.5" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="middle">仿真轨迹</text>
+<text x="210.0" y="208.5" font-size="20" font-weight="500" text-anchor="middle" dominant-baseline="middle">state / qvel / qtorque</text>
+<text x="210.0" y="236.5" font-size="20" font-weight="500" text-anchor="middle" dominant-baseline="middle">joint_target / 三相机</text>
+<text x="210.0" y="264.5" font-size="20" font-weight="500" text-anchor="middle" dominant-baseline="middle">sim_time + wall_start</text>
+<rect x="470" y="130" width="330" height="185" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="484" y="146" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">420</text>
+<text x="635.0" y="179.0" font-size="21" font-weight="700" text-anchor="middle" dominant-baseline="middle">同构转换模块</text>
+<text x="635.0" y="208.0" font-size="21" font-weight="500" text-anchor="middle" dominant-baseline="middle">时间戳换算</text>
+<text x="635.0" y="237.0" font-size="21" font-weight="500" text-anchor="middle" dominant-baseline="middle">夹爪编码转换</text>
+<text x="635.0" y="266.0" font-size="21" font-weight="500" text-anchor="middle" dominant-baseline="middle">相机名称映射</text>
+<line x1="360" y1="222" x2="470" y2="222" stroke="black" stroke-width="3"/>
+<path d="M360,222 L470,222" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="920" y="95" width="610" height="570" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="934" y="111" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">430</text>
+<text x="1225.0" y="380.0" font-size="24" font-weight="500" text-anchor="middle" dominant-baseline="middle"></text>
+<text x="1225" y="135" font-size="25" font-weight="700" text-anchor="middle" dominant-baseline="middle">实机兼容数据集</text>
+<text x="975" y="190" font-size="21" font-weight="700" text-anchor="start" dominant-baseline="middle">metadata.yaml</text>
+<text x="975" y="236" font-size="21" font-weight="700" text-anchor="start" dominant-baseline="middle">episodes/&lt;id&gt;/</text>
+<text x="975" y="282" font-size="21" font-weight="500" text-anchor="start" dominant-baseline="middle">  obs/arms/left/state.parquet</text>
+<text x="975" y="328" font-size="21" font-weight="500" text-anchor="start" dominant-baseline="middle">  obs/arms/right/state.parquet</text>
+<text x="975" y="374" font-size="21" font-weight="500" text-anchor="start" dominant-baseline="middle">  action/arms/left/qpos.parquet</text>
+<text x="975" y="420" font-size="21" font-weight="500" text-anchor="start" dominant-baseline="middle">  action/arms/right/qpos.parquet</text>
+<text x="975" y="466" font-size="21" font-weight="500" text-anchor="start" dominant-baseline="middle">  cameras/head/&lt;ns&gt;.jpeg</text>
+<text x="975" y="512" font-size="21" font-weight="500" text-anchor="start" dominant-baseline="middle">  cameras/wrist_left/&lt;ns&gt;.jpeg</text>
+<text x="975" y="558" font-size="21" font-weight="500" text-anchor="start" dominant-baseline="middle">  cameras/wrist_right/&lt;ns&gt;.jpeg</text>
+<line x1="800" y1="222" x2="920" y2="222" stroke="black" stroke-width="3"/>
+<path d="M800,222 L920,222" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="260" y="500" width="520" height="125" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="274" y="516" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">440</text>
+<text x="520.0" y="547.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">绝对时间戳</text>
+<text x="520.0" y="577.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">wall_start_ns + round((t-t0)×10^9)</text>
+<line x1="520" y1="500" x2="620" y2="315" stroke="black" stroke-width="3" stroke-dasharray="12 8"/>
+<path d="M520,500 L620,315" fill="none" stroke="black" stroke-width="3" stroke-dasharray="12 8" marker-end="url(#arrow)"/>
+<rect x="510" y="755" width="580" height="115" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="524" y="771" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">450</text>
+<text x="800.0" y="797.0" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">同一读取器 / 厂商校验器 / 训练工具链</text>
+<text x="800.0" y="828.0" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">无需区分sim与real字段结构</text>
+<line x1="1225" y1="665" x2="1090" y2="812" stroke="black" stroke-width="3"/>
+<path d="M1225,665 L1090,812" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="800.0" y="975" font-size="22" text-anchor="middle">图4</text>
+</svg>

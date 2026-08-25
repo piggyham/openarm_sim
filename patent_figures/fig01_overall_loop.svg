@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<rect width="100%" height="100%" fill="white"/>
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 Z" fill="black"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Noto Sans CJK",sans-serif;fill:black}</style>
+<text x="800.0" y="42" font-size="32" font-weight="700" text-anchor="middle" dominant-baseline="middle">图1：仿真—实机双向闭环总体架构</text>
+<rect x="110" y="120" width="280" height="150" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="124" y="136" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">110</text>
+<text x="250.0" y="179.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">仿真任务与</text>
+<text x="250.0" y="210.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">脚本专家</text>
+<rect x="440" y="120" width="280" height="150" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="454" y="136" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">120</text>
+<text x="580.0" y="179.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">实机同构</text>
+<text x="580.0" y="210.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">数据生成</text>
+<rect x="770" y="120" width="280" height="150" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="784" y="136" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">130</text>
+<text x="910.0" y="179.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">统一校验与</text>
+<text x="910.0" y="210.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">策略训练</text>
+<rect x="1100" y="120" width="280" height="150" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="1114" y="136" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">140</text>
+<text x="1240.0" y="179.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">真实机器人</text>
+<text x="1240.0" y="210.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">策略执行</text>
+<rect x="1100" y="600" width="280" height="150" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="1114" y="616" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">150</text>
+<text x="1240.0" y="659.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">实机多模态采集</text>
+<text x="1240.0" y="690.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">Actual / Target / 图像</text>
+<rect x="770" y="600" width="280" height="150" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="784" y="616" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">160</text>
+<text x="910.0" y="659.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">因果同步与</text>
+<text x="910.0" y="690.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">公共语义映射</text>
+<rect x="440" y="600" width="280" height="150" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="454" y="616" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">170</text>
+<text x="580.0" y="659.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">数字孪生验证</text>
+<text x="580.0" y="690.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">实体 / 虚影 / 双模式</text>
+<rect x="110" y="600" width="280" height="150" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="124" y="616" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">180</text>
+<text x="250.0" y="659.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">误差分析与</text>
+<text x="250.0" y="690.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">参数修正</text>
+<line x1="390" y1="195" x2="440" y2="195" stroke="black" stroke-width="3"/>
+<path d="M390,195 L440,195" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="720" y1="195" x2="770" y2="195" stroke="black" stroke-width="3"/>
+<path d="M720,195 L770,195" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1050" y1="195" x2="1100" y2="195" stroke="black" stroke-width="3"/>
+<path d="M1050,195 L1100,195" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1240" y1="270" x2="1240" y2="600" stroke="black" stroke-width="3"/>
+<path d="M1240,270 L1240,600" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1100" y1="675" x2="1050" y2="675" stroke="black" stroke-width="3"/>
+<path d="M1100,675 L1050,675" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="770" y1="675" x2="720" y2="675" stroke="black" stroke-width="3"/>
+<path d="M770,675 L720,675" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="440" y1="675" x2="390" y2="675" stroke="black" stroke-width="3"/>
+<path d="M440,675 L390,675" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="110" y1="675" x2="60" y2="675" stroke="black" stroke-width="3"/>
+<path d="M110,675 L60,675" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="60" y1="675" x2="60" y2="195" stroke="black" stroke-width="3"/>
+<path d="M60,675 L60,195" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="60" y1="195" x2="110" y2="195" stroke="black" stroke-width="3"/>
+<path d="M60,195 L110,195" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="85.0" y="177.0" font-size="19" font-weight="500" text-anchor="middle" dominant-baseline="middle">闭环更新</text>
+<rect x="480" y="355" width="640" height="120" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="494" y="371" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">100</text>
+<text x="800.0" y="398.5" font-size="25" font-weight="700" text-anchor="middle" dominant-baseline="middle">双向关系核心</text>
+<text x="800.0" y="431.5" font-size="25" font-weight="500" text-anchor="middle" dominant-baseline="middle">Sim→Real 数据同构  +  Real→Sim 数字孪生</text>
+<text x="800.0" y="975" font-size="22" text-anchor="middle">图1</text>
+</svg>

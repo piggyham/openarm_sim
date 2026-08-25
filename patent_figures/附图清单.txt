@@ -1,0 +1,62 @@
+仿真—实机双向映射与数字孪生验证专利附图清单
+
+一、交付格式
+
+1. SVG：可编辑矢量源文件，适合后续在 Inkscape、Illustrator、Visio 等软件中调整。
+2. PNG：1600×1000 像素黑白预览图，适合审阅、插入初稿或沟通标注。
+3. generate_figures.py：全部附图的可重复生成脚本。
+
+二、附图文件
+
+图1  仿真—实机双向闭环总体架构
+     SVG：fig01_overall_loop.svg
+     PNG：fig01_overall_loop.png
+     主要标号：100、110、120、130、140、150、160、170、180。
+
+图2  多源数据公共时间区间与因果重采样
+     SVG：fig02_causal_sync.svg
+     PNG：fig02_causal_sync.png
+     主要标号：210、220、230、240、251、252、253、260、270。
+
+图3  关节、夹爪与相机的公共语义映射
+     SVG：fig03_semantic_mapping.svg
+     PNG：fig03_semantic_mapping.png
+     主要标号：300、311、312、313、321、322、323、331、332、333、340。
+
+图4  仿真数据转换为实机同构数据结构
+     SVG：fig04_isomorphic_dataset.svg
+     PNG：fig04_isomorphic_dataset.png
+     主要标号：410、420、430、440、450。
+
+图5  Actual实体与Target非物理虚影
+     SVG：fig05_actual_target_ghost.svg
+     PNG：fig05_actual_target_ghost.png
+     主要标号：510、520、530、540、550、560、570、580。
+
+图6  运动学/动力学双模式及误差分离
+     SVG：fig06_dual_modes.svg
+     PNG：fig06_dual_modes.png
+     主要标号：610、620、630、640、650、660。
+
+图7  多相机同帧对比与误差诊断界面
+     SVG：fig07_multimodal_dashboard.svg
+     PNG：fig07_multimodal_dashboard.png
+     主要标号：700、710、720、731、732、733、741、742、743、750、760、770。
+
+图8  实时镜像的线程隔离与最新帧通信结构
+     SVG：fig08_thread_architecture.svg
+     PNG：fig08_thread_architecture.png
+     主要标号：810、811、812、813、814、820、821、822、823、830。
+
+图9  基于仿真—实机差异的迭代修正闭环
+     SVG：fig09_feedback_loop.svg
+     PNG：fig09_feedback_loop.png
+     主要标号：910、920、930、940、950、960、970、980。
+
+三、提交前处理建议
+
+1. 当前图稿是技术交底与代理人沟通版，采用黑线、白底、无灰度填充。
+2. 正式递交前由专利代理人依据目标专利局格式要求统一字体、页边距、图号位置及线宽。
+3. 若代理人要求附图内不出现标题，可删除每张图顶部标题，仅在说明书“附图说明”中保留图名。
+4. 图中英文 Actual、Target、Sim、Real、WebSocket、MuJoCo 和 schema 可在定稿时保留或统一译为中文。
+5. 图中模块标号应与说明书、具体实施方式和权利要求引用保持一致。

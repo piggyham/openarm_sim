@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<rect width="100%" height="100%" fill="white"/>
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 Z" fill="black"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Noto Sans CJK",sans-serif;fill:black}</style>
+<text x="800.0" y="42" font-size="32" font-weight="700" text-anchor="middle" dominant-baseline="middle">图3：关节、夹爪与相机的公共语义映射</text>
+<text x="230" y="100" font-size="25" font-weight="700" text-anchor="middle" dominant-baseline="middle">数据源语义</text>
+<text x="800" y="100" font-size="25" font-weight="700" text-anchor="middle" dominant-baseline="middle">公共语义层 300</text>
+<text x="1370" y="100" font-size="25" font-weight="700" text-anchor="middle" dominant-baseline="middle">模型/工具链语义</text>
+<rect x="60" y="150" width="340" height="135" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="74" y="166" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">311</text>
+<text x="230.0" y="202.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">左/右臂各7关节</text>
+<text x="230.0" y="232.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">单位可能不同</text>
+<rect x="60" y="355" width="340" height="135" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="74" y="371" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">312</text>
+<text x="230.0" y="407.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">夹爪原始编码</text>
+<text x="230.0" y="437.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">0闭合/负值张开等</text>
+<rect x="60" y="560" width="340" height="135" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="74" y="576" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">313</text>
+<text x="230.0" y="612.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">head / wrist_left</text>
+<text x="230.0" y="642.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">wrist_right</text>
+<rect x="630" y="150" width="340" height="135" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="644" y="166" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">321</text>
+<text x="800.0" y="202.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">16维公共状态</text>
+<text x="800.0" y="232.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">左7+夹爪+右7+夹爪</text>
+<rect x="630" y="355" width="340" height="135" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="644" y="371" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">322</text>
+<text x="800.0" y="407.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">夹爪物理开度</text>
+<text x="800.0" y="437.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">0闭合，最大值张开</text>
+<rect x="630" y="560" width="340" height="135" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="644" y="576" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">323</text>
+<text x="800.0" y="612.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">front / left_wrist</text>
+<text x="800.0" y="642.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">right_wrist</text>
+<rect x="1200" y="150" width="340" height="135" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="1214" y="166" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">331</text>
+<text x="1370.0" y="202.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">仿真qpos / 实机obs</text>
+<text x="1370.0" y="232.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">统一关节顺序与弧度</text>
+<rect x="1200" y="355" width="340" height="135" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="1214" y="371" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">332</text>
+<text x="1370.0" y="407.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">控制器与数据集</text>
+<text x="1370.0" y="437.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">统一长度单位</text>
+<rect x="1200" y="560" width="340" height="135" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="1214" y="576" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">333</text>
+<text x="1370.0" y="612.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">模型固定图像键</text>
+<text x="1370.0" y="642.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">三相机有效性mask</text>
+<line x1="400" y1="217" x2="630" y2="217" stroke="black" stroke-width="3"/>
+<path d="M400,217 L630,217" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="515.0" y="199.0" font-size="19" font-weight="500" text-anchor="middle" dominant-baseline="middle">映射/归一化</text>
+<line x1="970" y1="217" x2="1200" y2="217" stroke="black" stroke-width="3"/>
+<path d="M970,217 L1200,217" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1085.0" y="199.0" font-size="19" font-weight="500" text-anchor="middle" dominant-baseline="middle">统一输出</text>
+<line x1="400" y1="422" x2="630" y2="422" stroke="black" stroke-width="3"/>
+<path d="M400,422 L630,422" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="515.0" y="404.0" font-size="19" font-weight="500" text-anchor="middle" dominant-baseline="middle">映射/归一化</text>
+<line x1="970" y1="422" x2="1200" y2="422" stroke="black" stroke-width="3"/>
+<path d="M970,422 L1200,422" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1085.0" y="404.0" font-size="19" font-weight="500" text-anchor="middle" dominant-baseline="middle">统一输出</text>
+<line x1="400" y1="627" x2="630" y2="627" stroke="black" stroke-width="3"/>
+<path d="M400,627 L630,627" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="515.0" y="609.0" font-size="19" font-weight="500" text-anchor="middle" dominant-baseline="middle">映射/归一化</text>
+<line x1="970" y1="627" x2="1200" y2="627" stroke="black" stroke-width="3"/>
+<path d="M970,627 L1200,627" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="1085.0" y="609.0" font-size="19" font-weight="500" text-anchor="middle" dominant-baseline="middle">统一输出</text>
+<rect x="470" y="790" width="660" height="105" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="484" y="806" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">340</text>
+<text x="800.0" y="842.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">映射元数据：来源类型、夹爪编码、相机映射、单位和版本</text>
+<text x="800.0" y="975" font-size="22" text-anchor="middle">图3</text>
+</svg>

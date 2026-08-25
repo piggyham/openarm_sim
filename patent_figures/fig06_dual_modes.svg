@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<rect width="100%" height="100%" fill="white"/>
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 Z" fill="black"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Noto Sans CJK",sans-serif;fill:black}</style>
+<text x="800.0" y="42" font-size="32" font-weight="700" text-anchor="middle" dominant-baseline="middle">图6：运动学/动力学双模式及误差分离</text>
+<rect x="590" y="90" width="420" height="110" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="604" y="106" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">610</text>
+<text x="800.0" y="129.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">统一EpisodeData</text>
+<text x="800.0" y="160.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">Actual + 可选Target</text>
+<line x1="800" y1="200" x2="400" y2="320" stroke="black" stroke-width="3"/>
+<path d="M800,200 L400,320" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="800" y1="200" x2="1200" y2="320" stroke="black" stroke-width="3"/>
+<path d="M800,200 L1200,320" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="125" y="320" width="550" height="145" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="400.0" y="361.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">运动学模式 620</text>
+<text x="400.0" y="392.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">Actual直接写qpos → 正运动学</text>
+<text x="400.0" y="423.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">精确复现实测姿态</text>
+<rect x="925" y="320" width="550" height="145" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="1200.0" y="361.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">动力学模式 630</text>
+<text x="1200.0" y="392.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">Target → 控制器 → 物理积分</text>
+<text x="1200.0" y="423.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">得到仿真实际状态</text>
+<rect x="125" y="560" width="550" height="155" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="139" y="576" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">640</text>
+<text x="400.0" y="608.5" font-size="21" font-weight="700" text-anchor="middle" dominant-baseline="middle">检查映射与视觉一致性</text>
+<text x="400.0" y="637.5" font-size="21" font-weight="500" text-anchor="middle" dominant-baseline="middle">关节顺序 / 零位 / 夹爪编码</text>
+<text x="400.0" y="666.5" font-size="21" font-weight="500" text-anchor="middle" dominant-baseline="middle">相机外参 / 时间同步</text>
+<rect x="925" y="560" width="550" height="155" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="939" y="576" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">650</text>
+<text x="1200.0" y="608.5" font-size="21" font-weight="700" text-anchor="middle" dominant-baseline="middle">检查控制与模型一致性</text>
+<text x="1200.0" y="637.5" font-size="21" font-weight="500" text-anchor="middle" dominant-baseline="middle">跟踪延迟 / 饱和 / 摩擦 / 负载</text>
+<text x="1200.0" y="666.5" font-size="21" font-weight="500" text-anchor="middle" dominant-baseline="middle">质量 / 惯量 / 阻尼 / 控制增益</text>
+<line x1="400" y1="465" x2="400" y2="560" stroke="black" stroke-width="3"/>
+<path d="M400,465 L400,560" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1200" y1="465" x2="1200" y2="560" stroke="black" stroke-width="3"/>
+<path d="M1200,465 L1200,560" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="460" y="805" width="680" height="105" rx="20" fill="white" stroke="black" stroke-width="3"/>
+<text x="800.0" y="842.5" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">误差分类结果 660</text>
+<text x="800.0" y="872.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">映射误差｜控制误差｜动力学建模误差｜视觉域差异</text>
+<line x1="400" y1="715" x2="650" y2="805" stroke="black" stroke-width="3"/>
+<path d="M400,715 L650,805" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="1200" y1="715" x2="950" y2="805" stroke="black" stroke-width="3"/>
+<path d="M1200,715 L950,805" fill="none" stroke="black" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="800.0" y="975" font-size="22" text-anchor="middle">图6</text>
+</svg>

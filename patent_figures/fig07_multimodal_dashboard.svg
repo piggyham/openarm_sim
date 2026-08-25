@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<rect width="100%" height="100%" fill="white"/>
+<defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 Z" fill="black"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Noto Sans CJK",sans-serif;fill:black}</style>
+<text x="800.0" y="42" font-size="32" font-weight="700" text-anchor="middle" dominant-baseline="middle">图7：多相机同帧对比与误差诊断界面</text>
+<rect x="55" y="90" width="1490" height="805" fill="white" stroke="black" stroke-width="3"/>
+<text x="69" y="106" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">700</text>
+<text x="800.0" y="492.5" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle"></text>
+<rect x="85" y="120" width="1430" height="80" fill="white" stroke="black" stroke-width="3"/>
+<text x="99" y="136" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">710</text>
+<text x="800.0" y="160.0" font-size="21" font-weight="700" text-anchor="middle" dominant-baseline="middle">数据源｜episode｜播放/暂停｜模式｜速度｜Target虚影</text>
+<rect x="85" y="225" width="700" height="270" fill="white" stroke="black" stroke-width="3"/>
+<text x="99" y="241" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">720</text>
+<text x="435.0" y="343.5" font-size="25" font-weight="700" text-anchor="middle" dominant-baseline="middle">交互式数字孪生自由视角</text>
+<text x="435.0" y="376.5" font-size="25" font-weight="500" text-anchor="middle" dominant-baseline="middle">Actual实体 + Target半透明虚影</text>
+<rect x="815" y="225" width="215" height="125" fill="white" stroke="black" stroke-width="3"/>
+<text x="829" y="241" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">731</text>
+<text x="922.5" y="287.5" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="middle">仿真front</text>
+<rect x="1055" y="225" width="215" height="125" fill="white" stroke="black" stroke-width="3"/>
+<text x="1069" y="241" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">732</text>
+<text x="1162.5" y="287.5" font-size="18" font-weight="700" text-anchor="middle" dominant-baseline="middle">仿真left wrist</text>
+<rect x="1295" y="225" width="215" height="125" fill="white" stroke="black" stroke-width="3"/>
+<text x="1309" y="241" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">733</text>
+<text x="1402.5" y="287.5" font-size="18" font-weight="700" text-anchor="middle" dominant-baseline="middle">仿真right wrist</text>
+<rect x="815" y="370" width="215" height="125" fill="white" stroke="black" stroke-width="3"/>
+<text x="829" y="386" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">741</text>
+<text x="922.5" y="432.5" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="middle">实机head</text>
+<rect x="1055" y="370" width="215" height="125" fill="white" stroke="black" stroke-width="3"/>
+<text x="1069" y="386" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">742</text>
+<text x="1162.5" y="432.5" font-size="18" font-weight="700" text-anchor="middle" dominant-baseline="middle">实机wrist left</text>
+<rect x="1295" y="370" width="215" height="125" fill="white" stroke="black" stroke-width="3"/>
+<text x="1309" y="386" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">743</text>
+<text x="1402.5" y="432.5" font-size="18" font-weight="700" text-anchor="middle" dominant-baseline="middle">实机wrist right</text>
+<rect x="85" y="530" width="700" height="160" fill="white" stroke="black" stroke-width="3"/>
+<text x="99" y="546" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">750</text>
+<text x="435.0" y="594.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">16通道Target / Actual数值表</text>
+<text x="435.0" y="625.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">误差阈值超限标记</text>
+<rect x="815" y="530" width="695" height="160" fill="white" stroke="black" stroke-width="3"/>
+<text x="829" y="546" font-size="20" font-weight="700" text-anchor="start" dominant-baseline="middle">760</text>
+<text x="1162.5" y="594.5" font-size="23" font-weight="700" text-anchor="middle" dominant-baseline="middle">16通道滚动趋势图</text>
+<text x="1162.5" y="625.5" font-size="23" font-weight="500" text-anchor="middle" dominant-baseline="middle">Target、Actual及误差随时间变化</text>
+<rect x="85" y="725" width="1425" height="130" fill="white" stroke="black" stroke-width="3"/>
+<text x="797.5" y="775.0" font-size="22" font-weight="700" text-anchor="middle" dominant-baseline="middle">帧级诊断结果 770</text>
+<text x="797.5" y="805.0" font-size="22" font-weight="500" text-anchor="middle" dominant-baseline="middle">关节误差｜夹爪误差｜模型限位｜相机对齐｜数据来源｜任务状态</text>
+<text x="800.0" y="975" font-size="22" text-anchor="middle">图7</text>
+</svg>
