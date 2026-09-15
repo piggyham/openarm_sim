@@ -1,25 +1,59 @@
-# openarm_mission
+# openarm_mission — OpenArm v1 双臂纸杯接力：仿真、数据与 π0.5 微调全流程
 
-当前数据采集、转换、归一化、LoRA 训练、评测与 OpenArmSim 命令统一记录在
-[COMMANDS.md](COMMANDS.md)。
+本目录是基于 [openpi](../) 的独立项目：在 MuJoCo 中搭建 OpenArm v1 双臂
+「纸杯接力」任务，用脚本专家通过 100/100 评测后批量采集演示数据，接入
+openpi 完成 π0.5 LoRA 微调与闭环评测，并进一步把整条接力拆成左右两个
+单臂子任务、用决策树组合两套 LoRA 策略完成完整任务。
 
-OpenArm v1 双臂纸杯接力任务的独立实现目录，当前完成 P0～P5：
+```text
+任务场景（俯视）
 
-1. 右臂从机器人右前方的红色 A 区夹起无把手一次性纸杯。
-2. 右臂把杯子直立放到桌面中央交接位并退出。
-3. 左臂从中央重新夹起纸杯。
-4. 左臂把杯子直立放到机器人左前方的蓝色 B 区。
+        ┌─────────────┐
+        │  桌面 + 水瓶  │
+        │             │
+   🔴A区 │   中央交接位  │ 🔵B区
+        └─────────────┘
+         🤖 双臂机器人
+```
 
-P0～P2 包含需求、官方模型、任务场景、14 维双臂控制接口、IK、力矩控制和
-安全限制。P3 增加双指接触门控、动态 weld 抓取约束、物理释放、任务状态机、
-随机化、成功/失败判定、LIBERO 风格 BDDL 以及带指标的视频记录。P4 增加
-双臂脚本专家、备选预抓取、后撤重试、双臂互锁、碰撞监控和 100 次正式评测。
-P4.5 进一步提供不使用 weld 的软指垫纯摩擦抓取、力限位阻抗、滑移检测和
-独立 100 次物理评测。P5 增加同步轨迹采集、视觉域随机化、确定性数据划分、
-LeRobot v2 转换和数据回放。
+**任务定义**：右臂从机器人右前方的红色 A 区夹起无把手一次性纸杯，直立放到
+桌面中央交接位并退出；左臂从中央重新夹起纸杯，直立放到机器人左前方的蓝色
+B 区并退出。要求全程纸杯直立、无 weld 作弊（P4.5 起为纯摩擦抓取）、双手
+顺序执行且互锁。
 
-三相机采用机器人本体视角：主相机安装在双臂头部上方并俯瞰桌面；左右腕相机
-相对正下视方向向前倾斜 30°，同时观察夹爪前方和下方接触区域。
+## 总体进度
+
+| 阶段 | 内容 | 结果 | 详细文档 |
+| --- | --- | --- | --- |
+| P0–P2 | 需求冻结、官方 MJCF 导入、IK / 力矩控制 / 安全限制 | IK 40/40 收敛，长稳 600 s | [phase_docs/p0–p2](phase_docs/) |
+| P3 | 真实接触任务：双指接触门控、动态 weld、状态机、成功判定 | 种子 0–9：10/10 | [phase_docs/p3.md](phase_docs/p3.md) |
+| P4 | 可恢复双臂脚本专家 + 100 次正式评测 | **100/100**，平均 XY 误差 9.7 mm | [phase_docs/p4.md](phase_docs/p4.md) |
+| P4.5 | 无 weld 纯摩擦抓取（软指垫 + 力限位阻抗 + 滑移检测） | **100/100**，平均 XY 误差 28.3 mm | [phase_docs/p4_5.md](phase_docs/p4_5.md) |
+| P5 | 20 Hz 同步轨迹采集、域随机化、LeRobot v2 转换 | 200 集 / 86,400 帧，160/20/20 | [phase_docs/p5.md](phase_docs/p5.md) |
+| P6 | 接入 openpi：transforms、data config、训练配置 | `OpenArmInputs/Outputs` 等 | [phase_docs/p6.md](phase_docs/p6.md) |
+| P7 | π0.5 LoRA 微调与闭环评测 | checkpoint 29999 闭环可跑 | [phase_docs/p7.md](phase_docs/p7.md) |
+| P9 | 按真机 OpenArm 数据集格式 v0.3.0 重采 200 条 | 与 `data/real_data/` 同构 | [phase_docs/p9.md](phase_docs/p9.md) |
+| P10–P12 | 新布局（26 cm 桌 + 水瓶）、左右臂拆分子任务、双 LoRA + 决策树 | 当前工作重点 | [SUBTASK_PIPELINE.md](SUBTASK_PIPELINE.md) |
+
+> **历史数据说明**：P5（`artifacts/p5/`）与 P9（`artifacts/p9/`）原始数据已于
+> 2026-08-08 删除；当前全量数据为最新布局（26 cm 桌 + 水瓶）采集的左右
+> 子任务数据集（`artifacts/p12_right_full_20260826/`、
+> `artifacts/p12_left_full_20260826/`）。旧数据及归一化统计不适用于当前
+> 脚本版本，重采后必须重新计算 normalization stats。
+
+## 任务与数据接口
+
+所有阶段共用一套接口，保证「采集—训练—推理」一致：
+
+- **状态（16 维）**：左右臂各 7 关节角度 + 夹爪开度（米）。
+- **动作（14 维）**：`[left dx dy dz dRx dRy dRz gripper, right …]`。
+  平移单位米，旋转为旋转向量（弧度），夹爪 `-1` 全开 / `+1` 全闭。
+  对齐语义为 `observation[t] -> action[t] -> target[t+1]`，控制频率 `20 Hz`。
+- **相机（3 路，本体视角）**：`head` 相机位于双臂上方俯瞰桌面；左右腕相机
+  以物理刚体（L 形支架 + 相机壳）安装在 J8/`hand` 上，画面顺时针旋转 90°。
+- **语言指令**（`task_modes.py`）：
+  - `relay`：双手完整接力；`right`：仅右臂 A 区→中央；`left`：仅左臂中央→B 区。
+  - 接力数据按任务阶段逐帧标注当前激活的子任务指令。
 
 ## 目录结构
 
@@ -28,275 +62,151 @@ openarm_mission/
 ├── config.py                   # 场景尺寸、区域位置和控制参数
 ├── model.py                    # OpenArm v1 MJCF 组合、纸杯、桌面和相机
 ├── controller.py               # 双臂 DLS IK、力矩 PD 和安全限制
-├── demo.py                     # 右手→中央→左手→蓝区动态演示
 ├── task.py                     # P3 接触门控、weld、状态机和成功判定
-├── p3_episode.py               # P3 success/failure episode 与视频导出
 ├── expert.py                   # P4 可恢复双臂脚本专家
-├── p4_benchmark.py             # P4 多进程评测、CSV/JSON 和可视化面板
 ├── friction_task.py            # P4.5 无 weld 接触力/滑移状态机
-├── friction_expert.py          # P4.5 软指垫纯摩擦双臂专家
-├── p45_benchmark.py            # P4.5 纯摩擦多进程评测和面板
-├── dataset.py                  # P5 数据定义、同步记录和域随机化
-├── collect_dataset.py          # P5 批量采集与对齐报告
-├── convert_to_lerobot.py       # P5 LeRobot v2 转换
-├── replay_dataset.py           # P5 三视图轨迹回放
+├── friction_expert.py          # P4.5 软指垫纯摩擦双臂专家（支持 --task right/left）
+├── dataset.py                  # 数据定义、同步记录、域随机化和子任务标注
+├── collect_dataset.py          # 批量采集（--task relay/right/left）
+├── convert_to_lerobot.py       # LeRobot v2 转换
+├── convert_to_openarm_v03.py   # 转换为真机 OpenArm 数据集格式 v0.3.0
+├── task_modes.py               # relay/right/left 模式定义与逐帧指令标注
+├── policy_router.py            # 右策略→稳定交接→左策略 的决策树路由
+├── policy_eval.py              # 闭环评测（单策略 / --hierarchical 双策略）
+├── openarm_sim/                # 回放前端：LeRobot parquet / v0.3.0 / 真机数据
+├── openarm_sim2/               # 独立仿真前端：robot6 全身 URDF + 网页面板
+├── urdf/                       # robot6 全身 URDF（底盘 + 脊柱 + 双臂 + 颈）
 ├── bddl/                       # LIBERO 风格任务定义
+├── phase_docs/                 # P0–P9 各阶段设计、命令与验证记录
+├── tests/                      # 全阶段自动测试
 ├── smoke_test.py               # 模型、IK、物理和离屏渲染检查
-├── tests/                      # P0～P5 自动测试
-├── dependencies/              # 官方模型 revision 锁定信息
 ├── fetch_openarm_v1.sh         # 幂等依赖下载脚本
 ├── SPEC.md                     # 冻结需求和验收口径
-├── TODO.md                     # 完整 Todo List
+├── COMMANDS.md                 # 全部命令速查
+├── SUBTASK_PIPELINE.md         # 左右拆分双 LoRA + 决策树完整流程
+├── TODO.md                     # 完整 Todo List 与验证记录
 └── artifacts/                  # 生成成果；默认不纳入 Git
 ```
 
-## 准备官方模型
+## 快速开始
+
+### 0. 环境准备
 
 ```bash
-bash openarm_mission/fetch_openarm_v1.sh
+# 在仓库根目录，使用 openpi 主环境 .venv
+bash openarm_mission/fetch_openarm_v1.sh   # 下载官方模型（锁定 revision 8955afb5…）
 ```
 
-官方 `openarm_mujoco` 依赖固定在 revision：
-
-```text
-8955afb54e4adfb59a236e2b4d15192b7a02865c
-```
-
-## 生成动态展示
-
-Linux 无窗口环境使用 EGL：
+无窗口 Linux 需要 EGL 离屏渲染，以下 MuJoCo 命令均带 `MUJOCO_GL=egl`。
 
 ```bash
-MUJOCO_GL=egl .venv/bin/python -m openarm_mission.demo
-```
+# 冒烟检查：模型、IK、物理与渲染
+MUJOCO_GL=egl .venv/bin/python -m openarm_mission.smoke_test
 
-默认生成：
-
-```text
-openarm_mission/artifacts/openarm_paper_cup_relay.mp4
-openarm_mission/artifacts/openarm_paper_cup_relay.gif
-openarm_mission/artifacts/openarm_paper_cup_relay_storyboard.png
-openarm_mission/artifacts/openarm_paper_cup_relay.json
-```
-
-快速预览：
-
-```bash
-MUJOCO_GL=egl .venv/bin/python -m openarm_mission.demo \
-  --duration-scale 0.35 --width 720 --height 480 --no-gif
-```
-
-这段 P0～P2 展示中，机械臂使用真实 MuJoCo 动力学与力矩控制；纸杯使用确定性
-抓取锁存跟随 TCP，以保证跨 MuJoCo 版本稳定复现。它是任务流程与控制基础设施
-演示，不代表已经训练好的物理抓取策略。P3 已提供接触门控物理任务；自动失败
-恢复和 100 次成功率评测列在 `TODO.md` 的 P4。
-
-## 运行 P3 物理任务
-
-同时生成一条成功 episode 和一条抓取丢失失败 episode：
-
-```bash
-MUJOCO_GL=egl .venv/bin/python -m openarm_mission.p3_episode \
-  --mode both --seed 7
-```
-
-输出目录：
-
-```text
-openarm_mission/artifacts/p3/p3_success_seed007.mp4
-openarm_mission/artifacts/p3/p3_success_seed007.json
-openarm_mission/artifacts/p3/p3_failure_seed007.mp4
-openarm_mission/artifacts/p3/p3_failure_seed007.json
-```
-
-不渲染视频，只快速执行状态机：
-
-```bash
-.venv/bin/python -m openarm_mission.p3_episode \
-  --mode success --seed 7 --no-video
-```
-
-P3 与 P2 展示不同：P3 只有在两侧手指都实际接触纸杯、夹爪闭合且杯子进入
-捕获空间时，才会激活对应手的 MuJoCo weld。激活后不再逐帧覆盖纸杯 free-joint
-位姿；放置时关闭 weld，由桌面接触承载纸杯。
-
-## 运行 P4 可恢复脚本专家
-
-所有仿真现在统一从双臂自然下垂姿态启动（7 个臂关节均为 `0`）。脚本专家展开
-当前执行手的第一步是肩部后撤：只移动 J1/J4（左 J1=`+0.55`、右 J1=`-0.55`、
-J4=`π/2`），将夹爪从竖直下垂抬到桌面上方；J2/J3/J5/J6/J7 保持不动。
-另一只手不提前占据桌面空间。
-
-运行普通 P4 episode：
-
-```bash
-.venv/bin/python -m openarm_mission.expert --seed 7
-```
-
-生成一条左右手首次抓取都被拒绝、随后分别后撤重试成功的动态演示：
-
-```bash
-MUJOCO_GL=egl .venv/bin/python -m openarm_mission.expert \
-  --seed 7 --video \
-  --inject-right-grasp-failure \
-  --inject-left-grasp-failure
-```
-
-P4 专家对左右手各提供 3 个预抓取变体和最多 3 次局部抓取尝试。接触门控拒绝
-后，当前手会张开夹爪、抬升、稳定并改用下一组偏移；局部恢复耗尽或发生运动
-异常时，最多允许 2 次整局执行。状态机互锁要求右手完成中央释放并退出后，
-左手才可进入交接区域。意外的机器人—桌面、双臂互撞和非手指杯体碰撞均会
-被检测和记录。
-
-恢复演示输出：
-
-```text
-openarm_mission/artifacts/p4/p4_expert_seed007.mp4
-openarm_mission/artifacts/p4/p4_expert_seed007.json
-openarm_mission/artifacts/p4/p4_expert_recovery_storyboard.png
-```
-
-## 运行 P4 正式评测
-
-```bash
-.venv/bin/python -m openarm_mission.p4_benchmark \
-  --episodes 100 --workers 4
-```
-
-种子 0～99 的正式结果为 `100/100` 成功，超过 `≥95%` 验收线；其中自动后撤
-重试 5 次、意外碰撞 0 次。平均终点 XY 误差 `9.7 mm`，最大终点倾角
-`0.034°`。评测会输出逐 episode CSV、完整 JSON 和 PNG 可视化面板：
-
-```text
-openarm_mission/artifacts/p4/p4_benchmark_100.csv
-openarm_mission/artifacts/p4/p4_benchmark_100.json
-openarm_mission/artifacts/p4/p4_benchmark_100.png
-```
-
-## 运行 P4.5 纯摩擦专家
-
-P4.5 使用独立场景配置，原始 P3/P4 模型和结果不变。它禁用官方刚性指面碰撞，
-改用绿色软指垫；夹爪保持位置阻抗形式，但将双指执行器力限制随机化为
-`8～12 N`。抓取确认要求双指接触和最小夹持力成立，随后分别执行 `0.3 s`
-静态保持和抬升保持，并持续检查接触丢失及杯子相对夹爪的位姿滑移。
-
-```bash
-.venv/bin/python -m openarm_mission.friction_expert --seed 7
-```
-
-生成动态视频：
-
-```bash
-MUJOCO_GL=egl .venv/bin/python -m openarm_mission.friction_expert \
-  --seed 7 --video --width 720 --height 480
-```
-
-OpenArm v1 在原桌面高度无法让左手到达中央的低位侧壁抓取位，因此 P4.5 专用
-配置将桌面上表面从 `0.28 m` 抬高至 `0.33 m`。放置时杯底降至桌面上方约
-`50 mm`，随后张开夹爪，由重力、摩擦和桌面碰撞完成落桌；状态机继续验证
-直立、桌面接触、双手退出和连续 `0.5 s` 稳定保持。
-
-运行 100 次纯摩擦评测：
-
-```bash
-.venv/bin/python -m openarm_mission.p45_benchmark \
-  --episodes 100 --workers 4
-```
-
-种子 0～99 的结果为 `100/100` 成功、weld 违规 `0`、意外碰撞 `0`。平均终点
-XY 误差 `28.3 mm`，最大最终倾角 `8.13°`。输出包括：
-
-```text
-openarm_mission/artifacts/p45/p45_friction_seed007.mp4
-openarm_mission/artifacts/p45/p45_friction_seed007.json
-openarm_mission/artifacts/p45/p45_friction_storyboard.png
-openarm_mission/artifacts/p45/p45_friction_benchmark_100.csv
-openarm_mission/artifacts/p45/p45_friction_benchmark_100.json
-openarm_mission/artifacts/p45/p45_friction_benchmark_100.png
-```
-
-## 测试与静态渲染
-
-```bash
+# 全部自动测试（25 项，覆盖 MuJoCo 2.3.7 / 3.2.3）
 .venv/bin/python -m unittest discover -s openarm_mission/tests -v
-examples/libero/.venv/bin/python -m unittest discover -s openarm_mission/tests -v
 ```
+
+### 1. 脚本专家与评测
 
 ```bash
-MUJOCO_GL=egl .venv/bin/python -m openarm_mission.smoke_test \
-  --render-path openarm_mission/artifacts/paper_cup_scene.png
+# 纯摩擦专家跑一条（P4.5，无 weld）
+.venv/bin/python -m openarm_mission.friction_expert --seed 7
+MUJOCO_GL=egl .venv/bin/python -m openarm_mission.friction_expert \
+  --seed 7 --video --width 720 --height 480      # 带视频
+
+# 100 次正式评测（可换 p4_benchmark 复现 weld 版）
+.venv/bin/python -m openarm_mission.p45_benchmark --episodes 100 --workers 4
 ```
 
-当前自动验证覆盖 MuJoCo 2.3.7 和 3.2.3，包括 25 项测试、40 个随机近邻
-全位姿 IK、任务区域位置 IK、接触门控、跨版本 weld、0.5 秒成功保持、双臂
-互锁、抓取恢复、软指垫和无 weld 完整接力。P3 完整物理流程已验证随机种子
-0～9，结果为 10/10 成功；P4 与 P4.5 均已验证随机种子 0～99，结果分别为
-100/100 成功。
+### 2. 采集数据并转换
 
-## P5 轨迹数据采集与 LeRobot 转换
-
-> **历史阶段（已归档）**：P5 数据（`artifacts/p5/`）与 P9 数据（`artifacts/p9/`）
-> 已于 2026-08-08 删除，当前全量仿真为 **P10** —— 用最新布局（26cm 桌 + 水瓶）
-> 采集的 200 集，以 OpenArm 数据集格式 v0.3.0 存放于
-> `artifacts/p10/openarm_paper_cup_relay/`（转换命令见 `phase_docs/p9.md`，
-> 下拉框 `sim_0`…`sim_199`，20 Hz）。下文为 P5 阶段的历史记录。
-
-> **重采提示**：自然下垂版脚本会额外记录安全展开和收纳段，数据版本为
-> `openarm-p10-natural-hang-v1`。旧 P10 数据及其归一化统计不适用于该轨迹；
-> 重采并转换后必须重新计算 normalization stats，再开始训练。种子 0 的无图像
-> 冒烟轨迹为 662 帧 / 33.05 秒，动作限幅验证通过；全量帧数以新采集 manifest
-> 为准。
-
-P5 以 `20 Hz` 记录纯摩擦脚本专家。每个控制帧包含 16 维双臂关节/夹爪状态、
-14 维双臂笛卡尔增量动作、纸杯位姿、MuJoCo 仿真时间和任务阶段。动作顺序为：
-
-```text
-[left dx dy dz dRx dRy dRz gripper,
- right dx dy dz dRx dRy dRz gripper]
-```
-
-平移单位为米，旋转采用旋转向量且单位为弧度；夹爪 `-1` 表示张开、`+1`
-表示闭合。对齐语义为 `observation[t] -> action[t] -> target[t+1]`。
-采集会随机化杯子位置/偏航、质量、摩擦、指垫摩擦、夹持力、光照、材质亮度
-以及相机位置和视场角。
-
-正式采集的 200 条成功轨迹均包含严格同帧的前视、左腕和右腕 RGB；其中前
-20 条作为图像—状态—动作—时间戳的显式对齐验收集。
+采集支持三种任务模式；左右拆分流程以 `right` / `left` 各采 200 条：
 
 ```bash
 MUJOCO_GL=egl .venv/bin/python -m openarm_mission.collect_dataset \
+  --task right --output-dir openarm_mission/artifacts/p12_right_full_20260826 \
   --episodes 200 --workers 16 --image-episodes 200
+# --task left 同理；长任务加 --resume --max-new-episodes 32 分批恢复
 ```
 
-长时间采集可增加 `--resume --max-new-episodes 32` 分批恢复。
-
-种子按 `seed % 10` 确定性划分：余数 `0` 为 test、`1` 为 validation、其余为
-train，200 条数据固定得到 `160/20/20`。原始数据和报告位于：
-
-```text
-openarm_mission/artifacts/p5/raw/
-openarm_mission/artifacts/p5/schema.json
-openarm_mission/artifacts/p5/manifest.json
-openarm_mission/artifacts/p5/alignment_20.json
-openarm_mission/artifacts/p5/splits.json
-```
-
-转换全部 200 条严格同步三相机轨迹：
+两种输出格式：
 
 ```bash
-.venv/bin/python -m openarm_mission.convert_to_lerobot
+# LeRobot v2（openpi 训练输入）
+.venv/bin/python -m openarm_mission.convert_to_lerobot \
+  --source-dir <采集目录> \
+  --output-dir  <采集目录>/lerobot/openarm_right_handoff \
+  --repo-id openarm_right_handoff --overwrite
+
+# 真机 OpenArm 数据集格式 v0.3.0（与 data/real_data/ 同构，可被厂商工具链消费）
+.venv/bin/python -m openarm_mission.convert_to_openarm_v03 \
+  --source <采集目录> --output <采集目录>/openarm_paper_cup_relay
 ```
 
-转换器保留 train/validation/test 边界，并在
-`meta/openarm_source_map.json` 记录 LeRobot episode、源种子和 SHA-256
-校验和的对应关系。回放命令：
+### 3. 接入 openpi：LoRA 微调与推理
+
+openpi 侧已注册 4 个配置（[src/openpi/training/config.py](../src/openpi/training/config.py)）：
+`pi05_openarm_paper_cup_relay(_lora)`（完整接力）与
+`pi05_openarm_right_handoff_lora` / `pi05_openarm_left_delivery_lora`
+（左右子任务）。典型流程：
 
 ```bash
-.venv/bin/python -m openarm_mission.replay_dataset \
-  openarm_mission/artifacts/p5/raw/episode_seed000000.npz \
-  --output openarm_mission/artifacts/p5/replay_seed000000.mp4
+export HF_LEROBOT_HOME=<LeRobot 数据集目录>
+
+# 归一化统计
+python scripts/compute_norm_stats.py --config-name pi05_openarm_right_handoff_lora
+
+# LoRA 微调（从 π0.5 预训练权重出发）
+python scripts/train.py pi05_openarm_right_handoff_lora \
+  --exp-name right_handoff_lora_20260826 \
+  --batch-size 32 --num-train-steps 30000 --save-interval 5000
+
+# 策略服务
+python scripts/serve_policy.py policy:checkpoint \
+  --policy.config pi05_openarm_right_handoff_lora \
+  --policy.dir checkpoints/pi05_openarm_right_handoff_lora/right_handoff_lora_20260826/29999 \
+  --port 8001
 ```
 
-正式结果：种子 `0～199` 为 `200/200` 成功，共 `86,400` 个三相机控制帧；
-train/validation/test 为 `160/20/20`。转换后得到
-`200 episodes / 86,400 frames` 的 LeRobot v2 数据集，重新加载检查通过。
+### 4. 闭环评测与决策树
+
+[policy_eval.py](policy_eval.py) 连接策略服务，以滚动重规划消费 14 维 action
+chunk，通过双臂互锁镜像训练数据分布，按纸杯位置直接判定成败：
+
+```bash
+# 单策略
+MUJOCO_GL=egl .venv/bin/python -m openarm_mission.policy_eval \
+  --host 127.0.0.1 --port 8000 --episodes 5 --seed 7
+
+# 双 LoRA + 决策树：右策略交接稳定后切换左策略，完成完整接力
+MUJOCO_GL=egl .venv/bin/python -m openarm_mission.policy_eval \
+  --hierarchical \
+  --right-host 127.0.0.1 --right-port 8001 \
+  --left-host 127.0.0.1 --left-port 8002 \
+  --episodes 5 --start-seed 1000 \
+  --video-out openarm_mission/artifacts/eval_dual_lora
+```
+
+决策树（[policy_router.py](policy_router.py)）切换条件：杯子位于中央、直立
+稳定、接触桌面、右爪全开、右手退出交接区，并冻结双臂短暂停留。最终成功要求
+杯子在蓝区、稳定接触桌面、左爪打开且左手退出。**从采集、冒烟到双 LoRA 训练
+与决策树评测的完整命令清单见
+[SUBTASK_PIPELINE.md](SUBTASK_PIPELINE.md)。**
+
+## 前端工具
+
+| 前端 | 用途 | 启动 |
+| --- | --- | --- |
+| [openarm_sim/](openarm_sim/) | 姿态回放：LeRobot parquet / v0.3.0 数据 / 真机 episode / OpenArm Panel 实时源 | `MUJOCO_GL=egl .venv/bin/python -m openarm_mission.openarm_sim.server --port 8080` |
+| [openarm_sim2/](openarm_sim2/) | robot6 全身 URDF（底盘+脊柱+双臂+颈）独立仿真，网页关节面板 + 自由视角 | `.venv/bin/python -m openarm_mission.openarm_sim2.gui`，打开 `http://localhost:8899` |
+
+## 文档索引
+
+- [COMMANDS.md](COMMANDS.md) — 全阶段命令速查
+- [SUBTASK_PIPELINE.md](SUBTASK_PIPELINE.md) — 左右拆分双 LoRA + 决策树流程（当前主线）
+- [SPEC.md](SPEC.md) — 冻结需求与验收口径
+- [TODO.md](TODO.md) — 完整 Todo List 与逐阶段验证记录
+- [phase_docs/](phase_docs/) — P0–P9 设计细节、全部命令与验证结果
+- [openarm_sim/ARCHITECTURE.md](openarm_sim/ARCHITECTURE.md) — 回放前端架构
+- [openarm_sim2/README.md](openarm_sim2/README.md) — robot6 URDF 导入管线与网页面板
